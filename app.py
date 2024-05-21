@@ -94,5 +94,11 @@ def main():
         schedule.run_pending()
 
 
+
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        logger.warning('Программа завершена пользователем')
+    except Exception as e:
+        logger.warning(e)
