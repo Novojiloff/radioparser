@@ -1,0 +1,5 @@
+telebot
+schedule
+loguru
+shazamio
+nest_asyncio
