@@ -78,14 +78,12 @@ def record():
         response.raise_for_status()
 
         with open(filename, "wb") as f:
-            logger.info('Открываем файл для записи')
+            logger.info('Открываем файл для записи, пишем поток в файл')
             for chunk in response.iter_content(chunk_size=32):
                 if chunk:
-                    logger.info('Проверяем размер файла')
                     if os.path.getsize("radio_stream.mp3") >= 524288:
                         logger.info('Размер файла достаточный для распознавания. Выходим')
                         break
-                    logger.info('Пишем поток в файл')
                     f.write(chunk)
     except Exception:
         logger.warning('Что-то пошло не так. Ждем 15 секунд...')
@@ -100,7 +98,6 @@ def job():
     
 
 def main():
-    
     schedule.every(90).seconds.do(job)
     while True:
         schedule.run_pending()
