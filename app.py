@@ -22,30 +22,36 @@ nest_asyncio.apply()
 def check(artist, track):
     global prev_artist
     global prev_track
-    
+    logger.info('Проверяем совпадает ли распознанные артист и трэк с предыдущими')
     if artist != prev_artist and track != prev_track:
+        logger.info('Артист и трэк не совпадают с предыдущими. Фиксируем новые данные.')
         prev_artist = artist
         prev_track = track
         return True
+    logger.info('Артист и трэк совпадают с предыдущими. Игнорим.')
     return False
 
 
 async def recognize():
     shazam = Shazam()
+    logger.info('Распознаем записанный аудиофайл')
     text = await shazam.recognize('radio_stream.mp3')
+    logger.info('Проверяем удалось ли распознать музыку из файла')
     if text.get('matches'):
+        logger.info('Удалось распознать. Получаем имя исполнителя, название трэка и фото')
         artist = text.get('track').get('subtitle')
         track = text.get('track').get('title')
         photo = text.get('track').get('images').get('background')
 
         if check(artist=artist, track=track):
+            logger.info('Формируем сообщение и отправляем в телеграм канал')
             caption = f'Исполнитель: <b>{artist}</b>\n\nНазвание трэка: <b>{track}</b>'
-            logger.info(f'Stream recognized. Artist: {artist}, track: {track}')
+            logger.info(f'Распознано. Исполнитель: {artist}, трэк: {track}')
             bot.send_photo(chat_id, photo=photo, caption=caption, parse_mode="html")
         else:
-            logger.info(f'Stream recognized. Artist: {artist}, track: {track}')
+            logger.info(f'Распознано. Исполнитель: {artist}, трэк: {track}')
     else:
-        logger.warning('Nothing matched')
+        logger.warning('Распознать не удалось.')
 
 
 def record():
@@ -66,15 +72,20 @@ def record():
         'sec-ch-ua-platform': '"Windows"',
     }
     try:
+        logger.info('Поключаемся к аудио потоку')
         filename = "radio_stream.mp3"
         response = requests.get(radio_url, headers=headers, stream=True)
         response.raise_for_status()
 
         with open(filename, "wb") as f:
+            logger.info('Открываем файл для записи')
             for chunk in response.iter_content(chunk_size=32):
                 if chunk:
+                    logger.info('Проверяем размер файла')
                     if os.path.getsize("radio_stream.mp3") >= 524288:
+                        logger.info('Размер файла достаточный для распознавания. Выходим')
                         break
+                    logger.info('Пишем поток в файл')
                     f.write(chunk)
     except Exception:
         logger.warning('Что-то пошло не так. Ждем 15 секунд...')
@@ -89,7 +100,7 @@ def job():
     
 
 def main():
-    logger.info('Started...')
+    
     schedule.every(90).seconds.do(job)
     while True:
         schedule.run_pending()
@@ -98,8 +109,11 @@ def main():
 
 if __name__ == "__main__":
     try:
+        logger.info('Программа запущена')
         main()
     except KeyboardInterrupt:
         logger.warning('Программа завершена пользователем')
     except Exception as e:
         logger.warning(e)
+    finally:
+        logger.info('Программа завершена')
