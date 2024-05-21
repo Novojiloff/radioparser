@@ -77,6 +77,7 @@ def record():
                         break
                     f.write(chunk)
     except Exception:
+        logger.warning('Что-то пошло не так. Ждем 15 секунд...')
         sleep(15)
         pass
 
