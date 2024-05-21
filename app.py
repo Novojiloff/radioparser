@@ -73,7 +73,7 @@ def record():
         with open(filename, "wb") as f:
             for chunk in response.iter_content(chunk_size=32):
                 if chunk:
-                    if os.path.getsize("radio_stream.mp3") >= 102_400:
+                    if os.path.getsize("radio_stream.mp3") >= 524288:
                         break
                     f.write(chunk)
     except Exception:
