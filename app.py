@@ -2,7 +2,7 @@ import telebot
 import schedule
 from loguru import logger
 import sys
-from config import token, chat_id, radio_url
+from config import token, chat_id, radio_url, monitoring_chat_id
 import requests
 import os
 import asyncio
@@ -53,7 +53,9 @@ async def recognize():
                 bot.send_photo(chat_id, photo=photo, caption=caption, disable_notification=True, parse_mode="html")
         else:
             logger.info('Распознать не удалось.')
+            bot.send_message(monitoring,  text="Ничего не распознано")
     except AttributeError as e:
+        bot.send_message(monitoring_chat_id,  text="Что-то я ничего не получил в ответ. Попробуем в следующий раз")
         logger.warning('Что-то я ничего не получил в ответ. Попробуем в следующий раз')
         logger.warning(e)
         pass
@@ -92,6 +94,7 @@ def record():
                         break
                     f.write(chunk)
     except Exception:
+        bot.send_message(monitoring_chat_id,  text="Что-то пошло не так. Ждем 15 секунд...")
         logger.warning('Что-то пошло не так. Ждем 15 секунд...')
         sleep(15)
         pass
@@ -104,7 +107,7 @@ def job():
     
 
 def main():
-    schedule.every(90).seconds.do(job)
+    schedule.every(5).seconds.do(job)
     while True:
         schedule.run_pending()
 
@@ -119,5 +122,5 @@ if __name__ == "__main__":
     except Exception as e:
         logger.warning(e)
     finally:
-        bot.send_message(chat_id,  text="Программа завершилась с ошибкой!!! Беги смотреть что произошло!!!")
+        bot.send_message(monitoring_chat_id,  text="Программа завершилась с ошибкой!!! Беги смотреть что произошло!!!")
         logger.info('Программа завершена')
