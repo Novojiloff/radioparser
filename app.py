@@ -107,7 +107,7 @@ def job():
     
 
 def main():
-    schedule.every(5).seconds.do(job)
+    schedule.every(90).seconds.do(job)
     while True:
         schedule.run_pending()
 
