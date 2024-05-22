@@ -9,6 +9,7 @@ import asyncio
 from shazamio import Shazam
 import nest_asyncio
 from time import sleep
+from tqdm import tqdm
 
 logger.remove()
 logger.add("./log/file_{time}.log", rotation="100 MB")
@@ -82,10 +83,10 @@ def record():
 
         with open(filename, "wb") as f:
             logger.info('Открываем файл для записи, пишем поток в файл')
-            for chunk in response.iter_content(chunk_size=32):
+            for chunk in tqdm(response.iter_content(chunk_size=32), ncols=80, ascii=True, desc='Записываем файл:'):
                 if chunk:
                     if os.path.getsize("radio_stream.mp3") >= 524288:
-                        logger.info('Размер файла достаточный для распознавания. Выходим')
+                        logger.info('\nРазмер файла достаточный для распознавания. Выходим')
                         break
                     f.write(chunk)
     except Exception:
@@ -101,7 +102,7 @@ def job():
     
 
 def main():
-    schedule.every(90).seconds.do(job)
+    schedule.every(5).seconds.do(job)
     while True:
         schedule.run_pending()
 
