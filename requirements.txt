@@ -4,3 +4,4 @@ schedule
 loguru
 shazamio
 nest_asyncio
+tqdm
