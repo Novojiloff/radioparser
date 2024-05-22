@@ -49,7 +49,7 @@ async def recognize():
 
             if check(artist=artist, track=track):
                 logger.info('Формируем сообщение и отправляем в телеграм канал')
-                caption = f'Исполнитель: <b>{artist}</b>\n\nНазвание трэка: <b>{track}</b>'
+                caption = f'Исполнитель 🎙: <b>{artist}</b>\n\nНазвание трэка 🎶: <b>{track}</b>'
                 bot.send_photo(chat_id, photo=photo, caption=caption, disable_notification=True, parse_mode="html")
         else:
             logger.info('Распознать не удалось.')
