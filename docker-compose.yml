@@ -1,0 +1,7 @@
+version: '3.1'
+
+services:
+  parser:
+    container_name: radio_parser
+    restart: always
+    build: .

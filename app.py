@@ -37,21 +37,24 @@ async def recognize():
     logger.info('Распознаем записанный аудиофайл')
     text = await shazam.recognize('radio_stream.mp3')
     logger.info('Проверяем удалось ли распознать музыку из файла')
-    if text.get('matches'):
-        logger.info('Удалось распознать. Получаем имя исполнителя, название трэка и фото')
-        artist = text.get('track').get('subtitle')
-        track = text.get('track').get('title')
-        photo = text.get('track').get('images').get('background')
+    if text:
+        if text.get('matches'):
+            logger.info('Удалось распознать. Получаем имя исполнителя, название трэка и фото')
+            artist = text.get('track').get('subtitle')
+            track = text.get('track').get('title')
+            photo = text.get('track').get('images').get('background')
 
-        if check(artist=artist, track=track):
-            logger.info('Формируем сообщение и отправляем в телеграм канал')
-            caption = f'Исполнитель: <b>{artist}</b>\n\nНазвание трэка: <b>{track}</b>'
-            logger.info(f'Распознано. Исполнитель: {artist}, трэк: {track}')
-            bot.send_photo(chat_id, photo=photo, caption=caption, parse_mode="html")
+            if check(artist=artist, track=track):
+                logger.info('Формируем сообщение и отправляем в телеграм канал')
+                caption = f'Исполнитель: <b>{artist}</b>\n\nНазвание трэка: <b>{track}</b>'
+                logger.info(f'Распознано. Исполнитель: {artist}, трэк: {track}')
+                bot.send_photo(chat_id, photo=photo, caption=caption, parse_mode="html")
+            else:
+                logger.info(f'Распознано. Исполнитель: {artist}, трэк: {track}')
         else:
-            logger.info(f'Распознано. Исполнитель: {artist}, трэк: {track}')
+            logger.warning('Распознать не удалось.')
     else:
-        logger.warning('Распознать не удалось.')
+        logger.warning('Что-то я ничего не получил в ответ. Попробуем в следующий раз')
 
 
 def record():
