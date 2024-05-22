@@ -119,4 +119,5 @@ if __name__ == "__main__":
     except Exception as e:
         logger.warning(e)
     finally:
+        bot.send_message(chat_id,  text="Программа завершилась с ошибкой!!! Беги смотреть что произошло!!!")
         logger.info('Программа завершена')
