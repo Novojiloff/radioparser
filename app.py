@@ -53,7 +53,7 @@ async def recognize():
                 bot.send_photo(chat_id, photo=photo, caption=caption, disable_notification=True, parse_mode="html")
         else:
             logger.info('Распознать не удалось.')
-    except Exception as e:
+    except AttributeError as e:
         logger.warning('Что-то я ничего не получил в ответ. Попробуем в следующий раз')
         logger.warning(e)
         pass
