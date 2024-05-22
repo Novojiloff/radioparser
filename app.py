@@ -52,7 +52,7 @@ async def recognize():
             else:
                 logger.info(f'Распознано. Исполнитель: {artist}, трэк: {track}')
         else:
-            logger.warning('Распознать не удалось.')
+            logger.info('Распознать не удалось.')
     else:
         logger.warning('Что-то я ничего не получил в ответ. Попробуем в следующий раз')
 
@@ -75,6 +75,7 @@ def record():
         'sec-ch-ua-platform': '"Windows"',
     }
     try:
+        logger.info('-' * 30)
         logger.info('Поключаемся к аудио потоку')
         filename = "radio_stream.mp3"
         response = requests.get(radio_url, headers=headers, stream=True)
