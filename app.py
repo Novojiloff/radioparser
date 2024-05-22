@@ -24,10 +24,12 @@ def check(artist, track):
     global prev_track
     logger.info('Проверяем совпадает ли распознанные артист и трэк с предыдущими')
     if artist != prev_artist and track != prev_track:
+        logger.info(f'Распознано. Исполнитель: {artist}, трэк: {track}')
         logger.info('Артист и трэк не совпадают с предыдущими. Фиксируем новые данные.')
         prev_artist = artist
         prev_track = track
         return True
+    logger.info(f'Распознано. Исполнитель: {artist}, трэк: {track}')
     logger.info('Артист и трэк совпадают с предыдущими. Игнорим.')
     return False
 
@@ -47,10 +49,7 @@ async def recognize():
             if check(artist=artist, track=track):
                 logger.info('Формируем сообщение и отправляем в телеграм канал')
                 caption = f'Исполнитель: <b>{artist}</b>\n\nНазвание трэка: <b>{track}</b>'
-                logger.info(f'Распознано. Исполнитель: {artist}, трэк: {track}')
                 bot.send_photo(chat_id, photo=photo, caption=caption, parse_mode="html")
-            else:
-                logger.info(f'Распознано. Исполнитель: {artist}, трэк: {track}')
         else:
             logger.info('Распознать не удалось.')
     else:
