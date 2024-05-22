@@ -53,7 +53,6 @@ async def recognize():
                 bot.send_photo(chat_id, photo=photo, caption=caption, disable_notification=True, parse_mode="html")
         else:
             logger.info('Распознать не удалось.')
-            bot.send_message(monitoring,  text="Ничего не распознано")
     except AttributeError as e:
         bot.send_message(monitoring_chat_id,  text="Что-то я ничего не получил в ответ. Попробуем в следующий раз")
         logger.warning('Что-то я ничего не получил в ответ. Попробуем в следующий раз')
@@ -90,7 +89,7 @@ def record():
             for chunk in tqdm(response.iter_content(chunk_size=32), ncols=80, ascii=True, desc='Записываем файл:'):
                 if chunk:
                     if os.path.getsize("radio_stream.mp3") >= 524288:
-                        logger.info('\nРазмер файла достаточный для распознавания. Выходим')
+                        logger.info('Размер файла достаточный для распознавания. Выходим')
                         break
                     f.write(chunk)
     except Exception:
