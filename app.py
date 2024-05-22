@@ -11,7 +11,7 @@ import nest_asyncio
 from time import sleep
 
 logger.remove()
-logger.add("file_{time}.log", rotation="100 MB")
+logger.add("./log/file_{time}.log", rotation="100 MB")
 logger.add(sink=sys.stderr, format="{time:D MMMM YYYY > HH:mm:ss} | {level} | {message}")
 bot = telebot.TeleBot(token)
 prev_artist = ''
