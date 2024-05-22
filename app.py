@@ -40,7 +40,7 @@ async def recognize():
     logger.info('Распознаем записанный аудиофайл')
     text = await shazam.recognize('radio_stream.mp3')
     logger.info('Проверяем удалось ли распознать музыку из файла')
-    if text:
+    try:
         if text.get('matches'):
             logger.info('Удалось распознать. Получаем имя исполнителя, название трэка и фото')
             artist = text.get('track').get('subtitle')
@@ -53,8 +53,10 @@ async def recognize():
                 bot.send_photo(chat_id, photo=photo, caption=caption, disable_notification=True, parse_mode="html")
         else:
             logger.info('Распознать не удалось.')
-    else:
+    except Exception as e:
         logger.warning('Что-то я ничего не получил в ответ. Попробуем в следующий раз')
+        logger.warning(e)
+        pass
 
 
 def record():
