@@ -107,12 +107,12 @@ def record():
 
         with open(filename, "wb") as f:
             logger.info('Открываем файл для записи, пишем поток в файл')
-            for chunk in tqdm(response.iter_content(chunk_size=32), ncols=80, ascii=True, desc='Записываем файл:'):
+            for chunk in response.iter_content(chunk_size=32):
                 if chunk:
+                    f.write(chunk)
                     if os.path.getsize("radio_stream.mp3") >= 524288:
                         logger.info('Размер файла достаточный для распознавания. Выходим')
                         break
-                    f.write(chunk)
     except Exception:
         send(message="Что-то пошло не так. Ждем 15 секунд...")
         logger.warning('Что-то пошло не так. Ждем 15 секунд...')
