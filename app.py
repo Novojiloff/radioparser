@@ -35,6 +35,27 @@ def check(artist, track):
     return False
 
 
+def send(message, photo=None):
+    if photo:
+        while True:
+            try:
+                bot.send_photo(chat_id, photo=photo, caption=message, disable_notification=True, parse_mode="html")
+                break
+            except Exception:
+                logger.warning('Что-то пошло не так. Ждем 10 секунд...')
+                sleep(10)
+                pass
+    else:
+        while True:
+            try:
+                bot.send_message(monitoring_chat_id,  text=message)
+                break
+            except Exception:
+                logger.warning('Что-то пошло не так. Ждем 10 секунд...')
+                sleep(10)
+                pass
+
+
 async def recognize():
     shazam = Shazam()
     logger.info('Распознаем записанный аудиофайл')
@@ -49,12 +70,14 @@ async def recognize():
 
             if check(artist=artist, track=track):
                 logger.info('Формируем сообщение и отправляем в телеграм канал')
-                caption = f'Исполнитель 🎙: <b>{artist}</b>\n\nНазвание трэка 🎶: <b>{track}</b>'
-                bot.send_photo(chat_id, photo=photo, caption=caption, disable_notification=True, parse_mode="html")
+                message = f'Исполнитель 🎙: <b>{artist}</b>\n\nНазвание трэка 🎶: <b>{track}</b>'
+                send(message=message, photo=photo)
+                # bot.send_photo(chat_id, photo=photo, caption=message, disable_notification=True, parse_mode="html")
         else:
             logger.info('Распознать не удалось.')
     except AttributeError as e:
-        bot.send_message(monitoring_chat_id,  text="Что-то я ничего не получил в ответ. Попробуем в следующий раз")
+        send(message="Что-то я ничего не получил в ответ. Попробуем в следующий раз")
+        # bot.send_message(monitoring_chat_id,  text="Что-то я ничего не получил в ответ. Попробуем в следующий раз")
         logger.warning('Что-то я ничего не получил в ответ. Попробуем в следующий раз')
         logger.warning(e)
         pass
@@ -93,7 +116,8 @@ def record():
                         break
                     f.write(chunk)
     except Exception:
-        bot.send_message(monitoring_chat_id,  text="Что-то пошло не так. Ждем 15 секунд...")
+        # bot.send_message(monitoring_chat_id,  text="Что-то пошло не так. Ждем 15 секунд...")
+        send(message="Что-то пошло не так. Ждем 15 секунд...")
         logger.warning('Что-то пошло не так. Ждем 15 секунд...')
         sleep(15)
         pass
@@ -121,5 +145,6 @@ if __name__ == "__main__":
     except Exception as e:
         logger.warning(e)
     finally:
-        bot.send_message(monitoring_chat_id,  text="Программа завершилась с ошибкой!!! Беги смотреть что произошло!!!")
+        # bot.send_message(monitoring_chat_id,  text="Программа завершилась с ошибкой!!! Беги смотреть что произошло!!!")
+        send(message="Программа завершилась с ошибкой!!! Беги смотреть что произошло!!!")
         logger.info('Программа завершена')
