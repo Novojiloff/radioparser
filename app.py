@@ -70,14 +70,12 @@ async def recognize():
 
             if check(artist=artist, track=track):
                 logger.info('Формируем сообщение и отправляем в телеграм канал')
-                message = f'Исполнитель 🎙: <b>{artist}</b>\n\nНазвание трэка 🎶: <b>{track}</b>'
+                message = f'🎙 Исполнитель: <b>{artist}</b>\n\n🎶 Название трэка: <b>{track}</b>'
                 send(message=message, photo=photo)
-                # bot.send_photo(chat_id, photo=photo, caption=message, disable_notification=True, parse_mode="html")
         else:
             logger.info('Распознать не удалось.')
     except AttributeError as e:
         send(message="Что-то я ничего не получил в ответ. Попробуем в следующий раз")
-        # bot.send_message(monitoring_chat_id,  text="Что-то я ничего не получил в ответ. Попробуем в следующий раз")
         logger.warning('Что-то я ничего не получил в ответ. Попробуем в следующий раз')
         logger.warning(e)
         pass
@@ -116,7 +114,6 @@ def record():
                         break
                     f.write(chunk)
     except Exception:
-        # bot.send_message(monitoring_chat_id,  text="Что-то пошло не так. Ждем 15 секунд...")
         send(message="Что-то пошло не так. Ждем 15 секунд...")
         logger.warning('Что-то пошло не так. Ждем 15 секунд...')
         sleep(15)
@@ -143,8 +140,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         logger.warning('Программа завершена пользователем')
     except Exception as e:
-        logger.warning(e)
+        logger.critical(e)
     finally:
-        # bot.send_message(monitoring_chat_id,  text="Программа завершилась с ошибкой!!! Беги смотреть что произошло!!!")
         send(message="Программа завершилась с ошибкой!!! Беги смотреть что произошло!!!")
         logger.info('Программа завершена')
