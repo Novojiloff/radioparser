@@ -50,8 +50,9 @@ def send(message, photo=None):
             try:
                 bot.send_message(monitoring_chat_id,  text=message)
                 break
-            except Exception:
+            except Exception as e:
                 logger.warning('Что-то пошло не так. Ждем 10 секунд...')
+                logger.warning(e)
                 sleep(10)
                 pass
 
