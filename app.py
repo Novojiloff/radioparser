@@ -44,7 +44,6 @@ def send(message, photo=None):
             except Exception:
                 logger.warning('Что-то пошло не так. Ждем 10 секунд...')
                 logger.warning(e)
-                send(message=e)
                 sleep(10)
                 pass
     else:
@@ -55,7 +54,6 @@ def send(message, photo=None):
             except Exception as e:
                 logger.warning('Что-то пошло не так. Ждем 10 секунд...')
                 logger.warning(e)
-                send(message=e)
                 sleep(10)
                 pass
 
