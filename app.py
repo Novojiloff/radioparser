@@ -36,8 +36,9 @@ def check(artist, track):
 
 
 def send(message, photo=None):
+    count = 5
     if photo:
-        while True:
+        while count > 0:
             try:
                 bot.send_photo(chat_id, photo=photo, caption=message, disable_notification=True, parse_mode="html")
                 break
@@ -45,9 +46,10 @@ def send(message, photo=None):
                 logger.warning('Что-то пошло не так. Ждем 10 секунд...')
                 logger.warning(e)
                 sleep(10)
+                count -= 1
                 pass
     else:
-        while True:
+        while count > 0:
             try:
                 bot.send_message(monitoring_chat_id,  text=message)
                 break
@@ -55,6 +57,7 @@ def send(message, photo=None):
                 logger.warning('Что-то пошло не так. Ждем 10 секунд...')
                 logger.warning(e)
                 sleep(10)
+                count -= 1
                 pass
 
 
