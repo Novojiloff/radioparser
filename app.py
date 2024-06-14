@@ -12,7 +12,7 @@ from time import sleep
 from tqdm import tqdm
 
 logger.remove()
-logger.add("./log/file_{time}.log", rotation="100 MB")
+logger.add("./log/log.log", rotation="100 MB")
 logger.add(sink=sys.stderr, format="{time:D MMMM YYYY > HH:mm:ss} | {level} | {message}")
 bot = telebot.TeleBot(token)
 prev_artist = ''
@@ -58,14 +58,13 @@ def send(message, photo=None):
                 logger.warning(e)
                 sleep(10)
                 count -= 1
-                pass
 
 
 async def recognize():
     shazam = Shazam()
     logger.info('Распознаем записанный аудиофайл')
     text = await shazam.recognize('radio_stream.mp3')
-    logger.info('Проверяем удалось ли распознать музыку из файла')
+    # logger.info('Проверяем удалось ли распознать музыку из файла')
     try:
         if text.get('matches'):
             logger.info('Удалось распознать. Получаем имя исполнителя, название трэка и фото')
@@ -80,10 +79,9 @@ async def recognize():
         else:
             logger.info('Распознать не удалось.')
     except AttributeError as e:
-        send(message="Что-то я ничего не получил в ответ. Попробуем в следующий раз")
-        logger.warning('Что-то я ничего не получил в ответ. Попробуем в следующий раз')
+        # send(message="Что-то я ничего не получил в ответ. Попробуем в следующий раз")
+        # logger.warning('Что-то я ничего не получил в ответ. Попробуем в следующий раз')
         logger.warning(e)
-        pass
 
 
 def record():
@@ -119,7 +117,7 @@ def record():
                         logger.info('Размер файла достаточный для распознавания. Выходим')
                         break
     except Exception:
-        send(message="Что-то пошло не так. Ждем 15 секунд...")
+        # send(message="Что-то пошло не так. Ждем 15 секунд...")
         logger.warning('Что-то пошло не так. Ждем 15 секунд...')
         sleep(15)
         pass
@@ -137,15 +135,15 @@ def main():
         schedule.run_pending()
 
 
-
 if __name__ == "__main__":
     try:
         logger.info('Программа запущена')
+        send(message="Бот успешно запущен")
         main()
     except KeyboardInterrupt:
         logger.warning('Программа завершена пользователем')
     except Exception as e:
         logger.critical(e)
     finally:
-        send(message="Программа завершилась с ошибкой!!! Беги смотреть что произошло!!!")
+        send(message="Программа завершилась с ошибкой!!! Перезапускаем бота")
         logger.info('Программа завершена')
