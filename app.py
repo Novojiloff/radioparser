@@ -9,7 +9,6 @@ import asyncio
 from shazamio import Shazam
 import nest_asyncio
 from time import sleep
-from tqdm import tqdm
 
 logger.remove()
 logger.add("./log/log.log", rotation="100 MB")
@@ -47,7 +46,6 @@ def send(message, photo=None):
                 logger.warning(e)
                 sleep(10)
                 count -= 1
-                pass
     else:
         while count > 0:
             try:
@@ -120,7 +118,6 @@ def record():
         # send(message="Что-то пошло не так. Ждем 15 секунд...")
         logger.warning('Что-то пошло не так. Ждем 15 секунд...')
         sleep(15)
-        pass
 
 
 def job():
