@@ -39,7 +39,7 @@ def send(message, photo=None):
     if photo:
         while count > 0:
             try:
-                bot.send_photo(chat_id, photo=photo, caption=message, disable_notification=True, parse_mode="html")
+                bot.send_photo(chat_id, photo=photo, caption=message, disable_notification=True, parse_mode="html", protect_content=True)
                 break
             except Exception:
                 logger.warning('Что-то пошло не так. Ждем 10 секунд...')
